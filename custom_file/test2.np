@@ -1,0 +1,9 @@
+DATA block:
+    b = 1
+    c = 2
+    a = 0
+
+
+print("hello world")
+debug
+a = b + c
