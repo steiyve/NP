@@ -1,0 +1,5 @@
+DATA block:
+    name="nicolas"
+
+#the print statement work like in python your string, a variable, a string or nothing
+print("hello how are you",name)

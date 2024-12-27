@@ -2,12 +2,226 @@
 
 
 import sys
-from basic_io import print_func, input_func
-from vars import define_var
-from logics import if_call, execute_if
-from aritmethics import add, sub, mul, div
+
 
 variables: dict[str, any] = {}
+
+
+def print_func(line: str) -> None:
+    """
+    This function is used to print the output of the print function
+    :param line: str
+    :return: None
+    """
+    str_2_print = line.split(',')                                   # Split the line by commas      
+    str_2_print[-1] = str_2_print[-1].removesuffix(')\n')           # Remove the closing bracket and newline character
+    
+    for i in str_2_print:
+        if i in variables:                                          # If the variable is in the variables dictionary 
+            pos = str_2_print.index(i)
+            str_2_print[pos] = variables[i]                         # Replace the variable with its value
+    
+    
+    # Format the string to be printed
+    str_2_print = ' '.join(str_2_print)
+    str_2_print = str_2_print.removeprefix("print(")                # Remove the print function symbol
+    str_2_print = str_2_print.replace(')', '')                      # Remove the closing bracket
+    str_2_print = str_2_print.replace('"', '')                      # Remove the quotes
+    str_2_print = str_2_print.strip()
+
+    print(str_2_print)
+
+def input_func(line: str) -> None:
+    """
+    This function is used to take input from the user
+    :param line: str
+    :return: None
+    """
+
+    # Format the string to be printed
+    line = line.removeprefix("input(")
+    line = line.removesuffix(')')
+
+    # Split the line by commas
+    str_2_input = line.split(',')
+
+
+    str_2_input[0] = str_2_input[0].replace('"', '')                # Remove the quotes
+    str_2_input[1] = str_2_input[1].removeprefix(" ")
+    str_2_input[1] = str_2_input[1].removesuffix(")\n")             # Remove the closing bracket and newline character
+
+    # Get the input from the user
+    variables[str_2_input[1]] = input(str_2_input[0])
+
+def define_var(line: str) -> None:
+    """
+    This function is used to define variables in the DATA block
+    :param line: str
+    :retrun: None
+    """
+    if line == "\n":
+        return
+    if not line.startswith((' ', '\t')):
+        return
+    
+
+    name = line.split('=')[0].removeprefix('\t')                    # Remove tabs from the name
+    name = name.strip()                                             # Remove any remaining leading/trailing whitespace
+    value = line.split('=')[1].replace('"', '')
+    value = value.strip()
+
+    variables[name] = value
+
+def if_call(line: str) -> bool:
+    """
+    This function is used to call the if statement
+    :param line: str
+    :return: bool
+    """
+
+    # Format the string to be interpreted
+    line = line.removeprefix("if")                                  # Remove the if statement                      
+    line = line.split(" ")
+    del line[0]
+    
+    operator1 = line[0]                                             # Get the first operator of the condition
+    operator2 = line[2].replace('"', '')                            # Get the second operator of the condition  
+    operator2 = operator2.replace(':', '')
+    operator2 = operator2.strip()
+    condition = line[1]                                             # Get the symbol of the condition
+
+    # Check if the operator is a variable
+    if operator1 in variables.keys():
+        operator1 = variables[operator1]                            # Replace the variable with its value
+    
+    if operator2 in variables.keys():
+        operator2 = variables[operator2]                            # Replace the variable with its value
+
+    # Check if the condition is true
+    if condition == "==":
+        return operator1 == operator2
+    
+    if condition == "!=":
+        return operator1 != operator2
+
+    if condition == "<":
+        return operator1 < operator2
+    
+    if condition == ">":
+        return operator1 > operator2
+
+    if condition == "<=":
+        return operator1 <= operator2
+
+def execute_if(line: str) -> None:
+    """
+    This function is used to execute the code in the if statement
+    :param line: str
+    :return: None
+    """
+    # Format the string to be interpreted
+    line = line.removeprefix('\t')
+
+    if line.strip() == '\n':                                        # If the line is empty exit the if statement
+        return
+    
+    # Check if the line is a print statement
+    if line.strip().startswith("print"):
+        line = line.strip()
+        sys.stdout.write('\033[F')                                  # Move the cursor up one line
+        sys.stdout.write('\033[K')                                  # Clear the line
+        print_func(line)                                            # Call the print function
+    
+    # Check if the line is an input statement
+    if line.strip().startswith("input"):
+        input_func(line)                                            # Call the input function
+
+def add(line: str) -> None:
+    """
+    This function is used to add two numbers
+    :param line: str
+    :return: None
+    """
+    # Format and split the line
+    line = line.removesuffix('\n')
+    line = line.strip()
+    line = line.split(' ')
+    
+    # Example: line = ['a', '=', 'b', '+', 'c']    
+    if '=' in line:
+        if line[2] in variables.keys():                             # Check if the variable is in the variables dictionary
+            line[2] = variables[line[2]]                            # Replace the variable with its value
+
+        if line[4] in variables.keys():                             # Check if the variable is in the variables dictionary
+            line[4] = variables[line[4]]                            # Replace the variable with its value
+        
+        variables[line[0]] = float(line[2]) + float(line[4])        # Add the two numbers and store the result in the variables dictionary
+
+def sub(line: str) -> None:
+    """
+    This function is used to subtract two numbers
+    go see the add function for more information on how this function works
+    :param line: str
+    :return: None
+    """
+    
+    line = line.removesuffix('\n')
+    line = line.strip()
+    line = line.split(' ')
+    
+    # Example: line = ['a', '=', 'b', '+', 'c']    
+    if '=' in line:
+        if line[2] in variables.keys():
+            line[2] = variables[line[2]]
+
+        if line[4] in variables.keys():
+            line[4] = variables[line[4]]
+        
+        variables[line[0]] = float(line[2]) - float(line[4])
+
+
+
+def mul(line: str) -> None:
+    """
+    This function is used to multiply two numbers
+    go see the add function for more information on how this function works
+    :param line: str
+    :return: None
+    """
+    line = line.removesuffix('\n')
+    line = line.strip()
+    line = line.split(' ')
+    
+    # Example: line = ['a', '=', 'b', '+', 'c']    
+    if '=' in line:
+        if line[2] in variables.keys():
+            line[2] = variables[line[2]]
+
+        if line[4] in variables.keys():
+            line[4] = variables[line[4]]
+        
+        variables[line[0]] = float(line[2]) * float(line[4])
+    
+def div(line: str) -> None:
+    """
+    This function is used to divide two numbers
+    go see the add function for more information on how this function works
+    :param line: str
+    :return: None
+    """
+    line = line.removesuffix('\n')
+    line = line.strip()
+    line = line.split(' ')
+    
+    # Example: line = ['a', '=', 'b', '+', 'c']    
+    if '=' in line:
+        if line[2] in variables.keys():
+            line[2] = variables[line[2]]
+
+        if line[4] in variables.keys():
+            line[4] = variables[line[4]]
+        
+        variables[line[0]] = float(line[2]) / float(line[4])
 
 def main() -> int:
     filename = sys.argv[1]

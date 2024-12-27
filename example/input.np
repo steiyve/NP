@@ -1,0 +1,5 @@
+
+input("how are you: ",condition)
+
+if condition == ok:
+    print("youpi")
