@@ -3,6 +3,7 @@
 
 
 import sys
+from arithmetics import add, sub, mul, div
 
 
 variables: dict[str, any] = {}
@@ -163,95 +164,7 @@ def execute_if(line: str) -> None:
     if line.strip().startswith("input"):
         input_func(line)                                            # Call the input function
 
-def add(line: str) -> None:
-    """
-    This function is used to add two numbers
-    :param line: str
-    :return: None
-    """
-    # Format and split the line
-    line = line.removesuffix('\n')
-    line = line.strip()
-    line = line.split(' ')
 
-    # Check if the line is the good format
-    if len(line) != 5:
-        raise SyntaxError("SyntaxError: Missing operator")
-    
-    # Example: line = ['a', '=', 'b', '+', 'c']    
-    if '=' in line:
-        if line[2] in variables.keys():                             # Check if the variable is in the variables dictionary
-            line[2] = variables[line[2]]                            # Replace the variable with its value
-
-        if line[4] in variables.keys():                             # Check if the variable is in the variables dictionary
-            line[4] = variables[line[4]]                            # Replace the variable with its value
-        
-        variables[line[0]] = float(line[2]) + float(line[4])        # Add the two numbers and store the result in the variables dictionary
-
-    # If there is no equal sign the print the result of the operation
-    else:
-        print(float(line[2]) - float(line[4]))
-
-def sub(line: str) -> None:
-    """
-    This function is used to subtract two numbers
-    go see the add function for more information on how this function works
-    :param line: str
-    :return: None
-    """
-    
-    line = line.removesuffix('\n')
-    line = line.strip()
-    line = line.split(' ')
-
-    # Check if the line is the good format
-    if len(line) != 5:
-        raise SyntaxError("SyntaxError: Missing operator")
-    
-    # Example: line = ['a', '=', 'b', '+', 'c']    
-    if '=' in line:
-        if line[2] in variables.keys():
-            line[2] = variables[line[2]]
-
-        if line[4] in variables.keys():
-            line[4] = variables[line[4]]
-        
-        variables[line[0]] = float(line[2]) - float(line[4])
-    
-    else:
-        print(float(line[2]) - float(line[4]))
-
-
-
-def mul(line: str) -> None:
-    """
-    This function is used to multiply two numbers
-    go see the add function for more information on how this function works
-    :param line: str
-    :return: None
-    """
-    line = line.removesuffix('\n')
-    line = line.strip()
-    line = line.split(' ')
-
-    # Check if the line is the good format
-    if len(line) != 5:
-        raise SyntaxError("SyntaxError: Missing operator")
-    
-    # Example: line = ['a', '=', 'b', '+', 'c']    
-    if '=' in line:
-        if line[2] in variables.keys():
-            line[2] = variables[line[2]]
-
-        if line[4] in variables.keys():
-            line[4] = variables[line[4]]
-        
-        variables[line[0]] = float(line[2]) * float(line[4])
-    
-    else: 
-        print(float(line[2]) * float(line[4]))
-    
-def div(line: str) -> None:
     """
     This function is used to divide two numbers
     go see the add function for more information on how this function works
@@ -321,16 +234,16 @@ def main() -> int:
 
             # Arithmetic operations
             if '+' in line:
-                add(line)
+                add(line, variables)
 
             if '-' in line:
-                sub(line)
+                sub(line, variables)
 
             if '*' in line:
-                mul(line)
+                mul(line, variables)
 
             if '/' in line:
-                div(line)              
+                div(line, variables)              
 
     return 0
 
