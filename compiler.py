@@ -1,4 +1,5 @@
-
+# TODO: mudolarize the code for the arithmetics operation
+# TODO: implement a line by line mode
 
 
 import sys
@@ -13,14 +14,21 @@ def print_func(line: str) -> None:
     :param line: str
     :return: None
     """
-    str_2_print = line.split(',')                                   # Split the line by commas      
+    line = line.strip()
+    
+    # Check the syntax of the print statement
+    if not line.startswith("print(") and not line.endswith(')\n'):
+        raise SyntaxError("SyntaxError: Missing parentheses")
+    
+    str_2_print = line.split(',')                                   # Split the line by commas 
     str_2_print[-1] = str_2_print[-1].removesuffix(')\n')           # Remove the closing bracket and newline character
     
     for i in str_2_print:
-        if i in variables:                                          # If the variable is in the variables dictionary 
+        i = i.strip()                                               
+        if i in variables.keys():                                   # If the variable is in the variables dictionary 
             pos = str_2_print.index(i)
             str_2_print[pos] = variables[i]                         # Replace the variable with its value
-    
+        
     
     # Format the string to be printed
     str_2_print = ' '.join(str_2_print)
@@ -37,6 +45,11 @@ def input_func(line: str) -> None:
     :param line: str
     :return: None
     """
+    line = line.strip()
+
+    # Check the syntax of the inout statement
+    if not line.startswith("input(") and not line.endswith(')\n'):
+        raise SyntaxError("SyntaxError: Missing parentheses")
 
     # Format the string to be printed
     line = line.removeprefix("input(")
@@ -44,6 +57,10 @@ def input_func(line: str) -> None:
 
     # Split the line by commas
     str_2_input = line.split(',')
+
+    # Check the syntax of the input statement
+    if not (str_2_input[0].startswith('"') and str_2_input[0].endswith('"')):
+        raise SyntaxError("SyntaxError: Missing quotes")
 
 
     str_2_input[0] = str_2_input[0].replace('"', '')                # Remove the quotes
@@ -62,7 +79,10 @@ def define_var(line: str) -> None:
     if line == "\n":
         return
     if not line.startswith((' ', '\t')):
-        return
+        raise SyntaxError("SyntaxError: Missing tabs")
+    
+    if '=' not in line:
+        raise SyntaxError("SyntaxError: Missing equal sign")
     
 
     name = line.split('=')[0].removeprefix('\t')                    # Remove tabs from the name
@@ -84,11 +104,15 @@ def if_call(line: str) -> bool:
     line = line.split(" ")
     del line[0]
     
-    operator1 = line[0]                                             # Get the first operator of the condition
-    operator2 = line[2].replace('"', '')                            # Get the second operator of the condition  
-    operator2 = operator2.replace(':', '')
-    operator2 = operator2.strip()
-    condition = line[1]                                             # Get the symbol of the condition
+    try:
+        operator1 = line[0]                                             # Get the first operator of the condition
+        operator2 = line[2].replace('"', '')                            # Get the second operator of the condition  
+        operator2 = operator2.replace(':', '')
+        operator2 = operator2.strip()
+        condition = line[1]                                             # Get the symbol of the condition
+    except IndexError:                                                  # If there is missing condition or symbol                                             
+        raise SyntaxError("SyntaxError: Missing condition or symbol")
+
 
     # Check if the operator is a variable
     if operator1 in variables.keys():
@@ -119,6 +143,9 @@ def execute_if(line: str) -> None:
     :param line: str
     :return: None
     """
+    if not line.startswith('\t'):                                   # Check if the line start whit a tab
+        raise SyntaxError("SyntaxError: Missing tabs")
+    
     # Format the string to be interpreted
     line = line.removeprefix('\t')
 
@@ -146,6 +173,10 @@ def add(line: str) -> None:
     line = line.removesuffix('\n')
     line = line.strip()
     line = line.split(' ')
+
+    # Check if the line is the good format
+    if len(line) != 5:
+        raise SyntaxError("SyntaxError: Missing operator")
     
     # Example: line = ['a', '=', 'b', '+', 'c']    
     if '=' in line:
@@ -156,6 +187,10 @@ def add(line: str) -> None:
             line[4] = variables[line[4]]                            # Replace the variable with its value
         
         variables[line[0]] = float(line[2]) + float(line[4])        # Add the two numbers and store the result in the variables dictionary
+
+    # If there is no equal sign the print the result of the operation
+    else:
+        print(float(line[2]) - float(line[4]))
 
 def sub(line: str) -> None:
     """
@@ -168,6 +203,10 @@ def sub(line: str) -> None:
     line = line.removesuffix('\n')
     line = line.strip()
     line = line.split(' ')
+
+    # Check if the line is the good format
+    if len(line) != 5:
+        raise SyntaxError("SyntaxError: Missing operator")
     
     # Example: line = ['a', '=', 'b', '+', 'c']    
     if '=' in line:
@@ -178,6 +217,9 @@ def sub(line: str) -> None:
             line[4] = variables[line[4]]
         
         variables[line[0]] = float(line[2]) - float(line[4])
+    
+    else:
+        print(float(line[2]) - float(line[4]))
 
 
 
@@ -191,6 +233,10 @@ def mul(line: str) -> None:
     line = line.removesuffix('\n')
     line = line.strip()
     line = line.split(' ')
+
+    # Check if the line is the good format
+    if len(line) != 5:
+        raise SyntaxError("SyntaxError: Missing operator")
     
     # Example: line = ['a', '=', 'b', '+', 'c']    
     if '=' in line:
@@ -202,6 +248,9 @@ def mul(line: str) -> None:
         
         variables[line[0]] = float(line[2]) * float(line[4])
     
+    else: 
+        print(float(line[2]) * float(line[4]))
+    
 def div(line: str) -> None:
     """
     This function is used to divide two numbers
@@ -212,6 +261,10 @@ def div(line: str) -> None:
     line = line.removesuffix('\n')
     line = line.strip()
     line = line.split(' ')
+
+    # Check if the line is the good format
+    if len(line) != 5:
+        raise SyntaxError("SyntaxError: Missing operator")
     
     # Example: line = ['a', '=', 'b', '+', 'c']    
     if '=' in line:
@@ -222,9 +275,17 @@ def div(line: str) -> None:
             line[4] = variables[line[4]]
         
         variables[line[0]] = float(line[2]) / float(line[4])
+    
+    else: 
+        print(float(line[2]) * float(line[4]))
 
 def main() -> int:
-    filename = sys.argv[1]
+    try:
+        filename = sys.argv[1]
+    
+    except IndexError:
+        line_mode = True
+
 
     with open(filename, "r") as f:                                  # Open the file
         skip_next_line = False
