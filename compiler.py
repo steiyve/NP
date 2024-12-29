@@ -1,4 +1,4 @@
-# TODO: mudolarize the code for the arithmetics operation
+
 # TODO: implement a line by line mode
 # TODO: fix the missing tabs error when checking for syntax
 
@@ -19,15 +19,16 @@ def define_var(line: str) -> None:
     if line == "\n":
         return
     
-    if '=' not in line:
-        raise SyntaxError("SyntaxError: Missing equal sign")
+    # if '=' not in line:
+    #     raise SyntaxError("SyntaxError: Missing equal sign")
     
-
-    name = line.split('=')[0].removeprefix('\t')                    # Remove tabs from the name
-    name = name.strip()                                             # Remove any remaining leading/trailing whitespace
-    value = line.split('=')[1].replace('"', '')
-    value = value.strip()
-
+    try:
+        name = line.split('=')[0].removeprefix('\t')                    # Remove tabs from the name
+        name = name.strip()                                             # Remove any remaining leading/trailing whitespace
+        value = line.split('=')[1].replace('"', '')
+        value = value.strip()
+    except IndexError:
+        return
     variables[name] = value
 
 def if_call(line: str) -> bool:
