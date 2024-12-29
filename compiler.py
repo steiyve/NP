@@ -118,6 +118,9 @@ def main() -> int:
 
         # Loop through the file one line at a time
         for line in f:
+            if line.strip().startswith("#"):                        # If the line is a comment skip it
+                continue
+            
             if skip_next_line == True:                              # If the line is in the DATA block skip it
                 define_var(line)
 
