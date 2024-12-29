@@ -9,19 +9,21 @@ def add(line: str, variables: dict) -> None:
     line = line.strip()
     line = line.split(' ')
 
+
     # Check if the line is the good format
     if len(line) != 5:
         raise SyntaxError("SyntaxError: Missing operator")
     
     # Example: line = ['a', '=', 'b', '+', 'c']    
     if line[2] in variables.keys():                             # Check if the variable is in the variables dictionary
+
         line[2] = variables[line[2]]                            # Replace the variable with its value
+
 
     if line[4] in variables.keys():                             # Check if the variable is in the variables dictionary
         line[4] = variables[line[4]]                            # Replace the variable with its value
     
     variables[line[0]] = float(line[2]) + float(line[4])        # Add the two numbers and store the result in the variables dictionary
-
     
 
 def sub(line: str, variables: dict) -> None:
