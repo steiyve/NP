@@ -6,6 +6,8 @@
 import sys
 from arithmetics import add, sub, mul, div
 from bio import print_func, input_func
+from line import line_mode
+
 
 variables: dict[str, any] = {}
 
@@ -109,7 +111,8 @@ def main() -> int:
         filename = sys.argv[1]
     
     except IndexError:
-        line_mode = True
+        line_mode()
+        return 0
 
 
     with open(filename, "r") as f:                                  # Open the file
