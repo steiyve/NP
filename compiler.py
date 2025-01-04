@@ -8,7 +8,7 @@ from arithmetics import add, sub, mul, div
 from bio import print_func, input_func
 from line import line_mode
 from logic import if_call, execute_if
-from loops import for_loop
+from loops import for_loop, execute_for
 
 
 variables: dict[str, any] = {}
@@ -50,6 +50,7 @@ def main() -> int:
     with open(filename, "r") as f:                                  # Open the file
         skip_next_line = False
         if_skip = False
+        skip_loop_line = False
 
         # Loop through the file one line at a time
         for line in f:
@@ -65,6 +66,7 @@ def main() -> int:
             if line.strip() == "\n":                                # If the line is empty it mean the end of a if statement or the DATA block                          
                 skip_next_line = False
                 if_skip = False
+                skip_loop_line = False
             
             if line.strip() == "debug":                             # Print the variables dictionary             
                 skip_next_line = False
@@ -96,7 +98,13 @@ def main() -> int:
                 div(line, variables)
 
             if line.startswith("for"):
-                for_loop(line, variables)              
+                params = for_loop(line, variables)
+                skip_loop_line = True
+
+            if skip_loop_line == True and line.startswith('\t'):
+                for i in range(params[0], params[1], params[2]):
+                    variables[params[3]] = i
+                    execute_for(line, variables)        
 
     return 0
 

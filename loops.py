@@ -20,7 +20,7 @@ def for_loop(line, variables):
     start    = parts[2]
     end      = parts[3]
     step     = parts[4].removesuffix(":")
-    code     = parts[5]
+
     
 
     if start in variables.keys():
@@ -30,15 +30,29 @@ def for_loop(line, variables):
     if step in variables.keys():
         step = variables[step]
 
-    for i in range(int(start), int(end), int(step)):
-        variables[var_name] = i
-        if code.startswith("print"):
-            print_func(code, variables)
-        
-        if code.startswith("input"):
-            input_func(code, variables)
-        
-    # TODOL: add suport for the arithmetics and logic functions
+    return start, end, step, var_name
+    # TODO: add suport for the arithmetics and logic functions
 
 
-    return 0
+
+def execute_for(line: str, variables: dict):
+    if line.startswith("print"):
+        print_func(line, variables)
+    
+    if line.startswith("input"):
+        input_func(line, variables)
+    
+    if '+' in line:
+        add(line, variables)
+    
+    if '-' in line:
+        sub(line, variables)
+    
+    if '*' in line:
+        mul(line, variables)
+    
+    if '/' in line:
+        div(line, variables)
+
+
+    
