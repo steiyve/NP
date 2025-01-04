@@ -1,0 +1,4 @@
+# This is a simple for loop example
+for i in 0 10 2: print("hello",i,"times from a loop")
+debug
+

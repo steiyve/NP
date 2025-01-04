@@ -19,7 +19,7 @@ def print_func(line: str, variables: dict) -> None:
         i = i.strip()                                               
         if i in variables.keys():                                   # If the variable is in the variables dictionary 
             pos = str_2_print.index(i)
-            str_2_print[pos] = variables[i]                         # Replace the variable with its value
+            str_2_print[pos] = str(variables[i])                    # Replace the variable with its value
         
     
     # Format the string to be printed
