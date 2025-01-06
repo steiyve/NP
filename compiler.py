@@ -99,14 +99,11 @@ def main() -> int:
 
             if line.startswith("for"):
                 params = for_loop(line, variables)
-
-                skip_loop_line = True
-
-            if skip_loop_line == True :
                 for i in range(params[0], params[1], params[2]):
-                    print(i)
                     variables[params[3]] = i
-                    execute_for(line, variables)        
+                    execute_for(str(params[4]), variables)
+                
+                      
 
     return 0
 

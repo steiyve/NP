@@ -1,6 +1,12 @@
+DATA block:
+    a = 2
+
+a = 2 + 3
+
+debug
+
 # This is a simple for loop example
-for i in 0 10 6: 
-    print("hello")
+for z in 0 10 1: print(" s",z, " d")
 
 debug
 

@@ -20,6 +20,10 @@ def for_loop(line, variables):
     start    = int(parts[2])
     end      = int(parts[3])
     step     = int(parts[4].removesuffix(":"))
+    code     = parts[5:]
+    
+    code = ' '.join(code)
+    print(code)
 
     
 
@@ -30,7 +34,7 @@ def for_loop(line, variables):
     if step in variables.keys():
         step = variables[step]
 
-    return start, end, step, var_name
+    return start, end, step, var_name, code
     # TODO: add suport for the arithmetics and logic functions
 
 

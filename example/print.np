@@ -1,5 +1,8 @@
-
+DATA block:
+    name="nicolas"
 
 #the print statement work like in python your string, a variable, a string or nothing
-print("hello how are you")
+print("Hello, World!")
 
+#don't forget to don't add spaces to your print statement when you add variable to it
+print("hello",name,"how are you")
