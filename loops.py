@@ -17,9 +17,9 @@ def for_loop(line, variables):
     
     
     var_name = parts[0]
-    start    = parts[2]
-    end      = parts[3]
-    step     = parts[4].removesuffix(":")
+    start    = int(parts[2])
+    end      = int(parts[3])
+    step     = int(parts[4].removesuffix(":"))
 
     
 
